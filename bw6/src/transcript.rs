@@ -110,8 +110,7 @@ impl SimpleTranscript {
     pub fn finalize(&self, dest: &mut [u8]) {
         let mut keccak = Keccak::v256();
         keccak.update(&self.buffer);
-        let mut output = [0u8; 16];
-        keccak.finalize(&mut output);
+        keccak.finalize(dest);
     }
 }
 
