@@ -13,8 +13,11 @@ use fflonk::pcs::PcsParams;
 use merlin::Transcript;
 use rand::Rng;
 
-use apk_proofs::{AccountablePublicInput, Bitmask, hash_to_curve, Keyset, KeysetCommitment, Prover, setup, SimpleProof, Verifier, SimpleTranscript};
 use apk_proofs::bls::{PublicKey, SecretKey, Signature};
+use apk_proofs::{
+    hash_to_curve_g2, setup, AccountablePublicInput, Bitmask, Keyset, KeysetCommitment, Prover,
+    SimpleProof, Verifier, SimpleTranscript
+};
 
 // This example sketches the primary intended use case of the crate functionality:
 // building communication-efficient light clients for blockchains.
@@ -198,7 +201,11 @@ impl LightClient {
         let t_verification = start_timer!(|| format!("Light client verifies light client proof for {} signers", n_signers));
 
         let t_apk = start_timer!(|| "apk proof verification");
-        let verifier = Verifier::new(self.kzg_vk.clone(), self.current_validator_set_commitment.clone(), SimpleTranscript::new(b"apk_proof"));
+        let verifier = Verifier::new(
+            self.kzg_vk.clone(),
+            self.current_validator_set_commitment.clone(),
+            SimpleTranscript::new(b"apk_proof")
+        );
         assert!(verifier.verify_simple(&public_input, &proof));
         end_timer!(t_apk);
 
@@ -271,7 +278,7 @@ impl TrustlessHelper {
 fn hash_commitment(commitment: &KeysetCommitment) -> G2Projective {
     let mut buf = vec![0u8; commitment.compressed_size()];
     commitment.serialize_compressed(&mut buf[..]).unwrap();
-    hash_to_curve(&buf)
+    hash_to_curve_g2(&buf)
 }
 
 fn main() {
