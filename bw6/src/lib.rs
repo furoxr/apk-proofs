@@ -18,6 +18,7 @@ use crate::piop::counting::{CountingCommitments, CountingEvaluations};
 
 pub use self::prover::*;
 pub use self::verifier::*;
+pub use crate::transcript::{SimpleTranscript, SimpleTranscriptRng};
 
 mod prover;
 mod verifier;
