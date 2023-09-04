@@ -92,6 +92,13 @@ pub struct SimpleTranscript {
 }
 
 impl SimpleTranscript {
+    pub fn new(message: &[u8]) -> Self {
+        let buffer = Vec::new();
+        let mut transcript = SimpleTranscript { buffer };
+        transcript.update(message);
+        transcript
+    }
+
     pub fn update(&mut self, message: &[u8]) {
         self.buffer.append(&mut message.to_vec());
     }
